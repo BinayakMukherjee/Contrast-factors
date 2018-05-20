@@ -1,29 +1,30 @@
 import numpy
 import scipy.interpolate
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 #========================================================#
 
 def zener(c11,c12,c44): # definition of the Zener ratio
     return 2*c44/(c11-c12)
 
-def c_(c11,c12): # definition of the ratio c_12/c_44
+def c_(c12,c44): # definition of the ratio c_12/c_44
     return c12/c44
 
-def param_eqn(a,b,c,d,zener): # parametrization equation
-    return a*(1-numpy.exp(-zener/b)) + c*zener + d
+def param_eqn(a,b,c,d,c11,c12,c44): # parametrization equation
+    return a*(1-numpy.exp(-zener(c11,c12,c44)/b)) + c*zener(c11,c12,c44) + d
+
 
 #--- A parameters, low Zener ratio ----------------------#
 
-def A_lowZen_screw_FCC(zener): # calculation of parameter A for Zener ratio <=0.5 for screw dislocation
+def A_lowZen_screw_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for screw dislocation
                                # in FCC <110>{111} slip system
     a = 0.0454
     b = 0.1704
     c = 0.0901
     d = 0.0275
-    return param_eqn(a,b,c,d,zener)
-
-def A_lowZen_edge_FCC(zener,c_): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation
+    value = param_eqn(a,b,c,d,c11,c12,c44)
+    return value
+def A_lowZen_edge_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation
                                  # in FCC <110>{111} slip system
     a05 = 0.0737 # parameters for c_12/c_44 = 0.5
     b05 = 0.1712
@@ -42,12 +43,13 @@ def A_lowZen_edge_FCC(zener,c_): # calculation of parameter A for Zener ratio <=
     c3 = 0.1179
     d3 = 0.0286
     x = numpy.array([0.5,1,2,3])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return y_interp(c_)
+    value = y_interp(c_(c12,c44))
+    return value
 
-def A_lowZen_screw_BCC(zener,c_): # calculation of parameter A for Zener ratio <=0.5 for screw dislocation in
+def A_lowZen_screw_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for screw dislocation in
                                   # BCC <111>{110} slip system
     a05 = 0.0736 # parameters for c_12/c_44 = 0.5
     b05 = 0.2822
@@ -70,12 +72,14 @@ def A_lowZen_screw_BCC(zener,c_): # calculation of parameter A for Zener ratio <
     c5 = 0.0783
     d5 = 0.0216
     x = numpy.array([0.5,1,2,3,5])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener),param_eqn(a5,b5,c5,d5,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44),
+                     param_eqn(a5,b5,c5,d5,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return y_interp(c_)
+    value = y_interp(c_(c12,c44))
+    return value
 
-def A_lowZen_edge_BCC(zener,c_): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation in
+def A_lowZen_edge_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation in
                                  # BCC <111>{110} slip system
     a05 = 0.0565 # parameters for c_12/c_44 = 0.5
     b05 = 0.1548
@@ -98,22 +102,25 @@ def A_lowZen_edge_BCC(zener,c_): # calculation of parameter A for Zener ratio <=
     c5 = 0.14048
     d5 = 0.02075
     x = numpy.array([0.5,1,2,3,5])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener),param_eqn(a5,b5,c5,d5,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44),
+                     param_eqn(a5,b5,c5,d5,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return y_interp(c_)
+    value = y_interp(c_(c12,c44))
+    return value
 
 #--- B parameters, low Zener ratio ----------------------#
 
-def B_lowZen_screw_FCC(zener): # calculation of parameter B for Zener ratio <=0.5 for screw dislocation
+def B_lowZen_screw_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for screw dislocation
                                # in FCC <110>{111} slip system
     a = 48.5946
     b = 0.0713
     c = 9.7907
     d = -58.552
-    return - param_eqn(a,b,c,d,zener) * A_lowZen_screw_BCC(zener,c_)
+    value = -param_eqn(a,b,c,d,c11,c12,c44) * A_lowZen_screw_BCC(c11,c12,c44)
+    return value
 
-def B_lowZen_edge_FCC(zener,c_): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
+def B_lowZen_edge_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
                                  # in FCC <110>{111} slip system
     a05 = 43.4223 # parameters for c_12/c_44 = 0.5
     b05 = 0.0739
@@ -132,21 +139,23 @@ def B_lowZen_edge_FCC(zener,c_): # calculation of parameter B for Zener ratio <=
     c3 = 9.2576
     d3 = -50.1819
     x = numpy.array([0.5,1,2,3])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return -y_interp(c_) * A_lowZen_edge_BCC(zener,c_)
+    value = -y_interp(c_(c12,c44)) * A_lowZen_edge_BCC(zener,c_)
+    return value
 
-def B_lowZen_screw_BCC(zener,c_): # calculation of parameter B for Zener ratio <=0.5 for screw dislocation
-                                  # in BCC <111>{110} slip system
+def B_lowZen_screw_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for screw dislocation
+                                     # in BCC <111>{110} slip system
     a = 54.1422
     b = 0.0731
     c = 9.7907
     d = -58.552
-    return - param_eqn(a, b, c, d, zener) * A_lowZen_screw_FCC(zener,c_)
+    value = -param_eqn(a, b, c, d, c11,c12,c44) * A_lowZen_screw_FCC(c11,c12,c44)
+    return value
 
-def B_lowZen_edge_BCC(zener,c_): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
-                                 # in BCC <111>{110} slip system
+def B_lowZen_edge_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
+                                    # in BCC <111>{110} slip system
     a05 = 45.89136 # parameters for c_12/c_44 = 0.5
     b05 = 0.0691
     c05 = 9.09972
@@ -168,22 +177,25 @@ def B_lowZen_edge_BCC(zener,c_): # calculation of parameter B for Zener ratio <=
     c5 = 15.16578
     d5 = -57.58587
     x = numpy.array([0.5,1,2,3,5])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener),param_eqn(a5,b5,c5,d5,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44),
+                     param_eqn(a5,b5,c5,d5,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return -y_interp(c_) * A_lowZen_edge_FCC(zener,c_)
+    value = -y_interp(c_(c12,c44)) * A_lowZen_edge_FCC(c11,c12,c44)
+    return value
 
 #--- A parameters, high Zener ratio ----------------------#
 
-def A_highZen_screw_FCC(zener): # calculation of parameter A for Zener ratio > 0.5 for screw dislocation
+def A_highZen_screw_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for screw dislocation
                                 # in FCC <110>{111} slip system
     a = 0.1740
     b = 1.9522
     c = 0.0293
     d = 0.0662
-    return param_eqn(a,b,c,d,zener)
+    value = param_eqn(a,b,c,d,c11,c12,c44)
+    return value
 
-def A_highZen_edge_FCC(zener,c_): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
+def A_highZen_edge_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
                                   # in FCC <110>{111} slip system
     a05 = 0.1312 # parameters for c_12/c_44 = 0.5
     b05 = 1.4284
@@ -202,21 +214,23 @@ def A_highZen_edge_FCC(zener,c_): # calculation of parameter A for Zener ratio >
     c3 = 0.0186
     d3 = 0.0731
     x = numpy.array([0.5,1,2,3])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener)])
+    y = numpy.array([param_eqn(a05, b05, c05, d05, c11, c12, c44),param_eqn(a1, b1, c1, d1, c11, c12, c44),
+                     param_eqn(a2, b2, c2, d2, c11, c12, c44),param_eqn(a3, b3, c3, d3, c11, c12, c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return y_interp(c_)
+    value = y_interp(c_(c12,c44))
+    return value
 
-def A_highZen_screw_BCC(zener,c_): # calculation of parameter A for Zener ratio > 0.5 for screw dislocation
-                                   # in BCC <111>{110} slip system
+def A_highZen_screw_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for screw dislocation
+                                      # in BCC <111>{110} slip system
     a = 0.1740
     b = 1.9522
     c = 0.0293
     d = 0.0662
-    return param_eqn(a, b, c, d, zener)
+    value = param_eqn(a,b,c,d,c11,c12,c44)
+    return value
 
-def A_highZen_edge_BCC(zener,c_): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
-                                  # in BCC <111>{110} slip system
+def A_highZen_edge_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
+                                     # in BCC <111>{110} slip system
     a05 = 1.4948 # parameters for c_12/c_44 = 0.5
     b05 = 25.671
     c05 = 0.0
@@ -230,21 +244,24 @@ def A_highZen_edge_BCC(zener,c_): # calculation of parameter A for Zener ratio >
     c2 = 0.0
     d2 = 0.0563
     x = numpy.array([0.5,1,2])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return y_interp(c_)
+    value = y_interp(c_(c12,c44))
+    return value
 
 #--- B parameters, high Zener ratio ----------------------#
 
-def B_highZen_screw_FCC(zener): # calculation of parameter B for Zener ratio > 0.5 for screw dislocation
-                                # in FCC <110>{111} slip system
-    a = 0.0454
-    b = 0.1704
-    c = 0.0901
-    d = 0.0275
-    return - param_eqn(a,b,c,d,zener) * A_lowZen_screw_FCC(zener)
+def B_highZen_screw_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for screw dislocation
+                                      # in FCC <110>{111} slip system
+    a = 5.4252
+    b = 0.7196
+    c = 0.0690
+    d = -3.1970
+    value = -param_eqn(a,b,c,d,c11,c12,c44) #* A_lowZen_screw_FCC(c11,c12,c44)
+    return value
 
-def B_highZen_edge_FCC(zener,c_): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
+def B_highZen_edge_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
                                   # in FCC <110>{111} slip system
     a05 = 4.0327 # parameters for c_12/c_44 = 0.5
     b05 = 0.8846
@@ -263,12 +280,13 @@ def B_highZen_edge_FCC(zener,c_): # calculation of parameter B for Zener ratio >
     c3 = 0.0813
     d3 = -4.8129
     x = numpy.array([0.5,1,2,3])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener),
-                     param_eqn(a3,b3,c3,d3,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44),param_eqn(a3,b3,c3,d3,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return -y_interp(c_) * A_highZen_edge_FCC(zener,c_)
+    value = -y_interp(c_(c12,c44)) #* A_highZen_edge_FCC(c11,c12,c44)
+    return value
 
-def B_highZen_screw_BCC(zener,c_): # calculation of parameter B for Zener ratio > 0.5 for screw dislocation
+def B_highZen_screw_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for screw dislocation
                                    # in BCC <111>{110} slip system
     a05 = 7.5149 # parameters for c_12/c_44 = 0.5
     b05 = 0.3818
@@ -283,11 +301,13 @@ def B_highZen_screw_BCC(zener,c_): # calculation of parameter B for Zener ratio 
     c2 = 0.0415
     d2 = -3.5021
     x = numpy.array([0.5,1,2])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return -y_interp(c_) * A_highZen_screw_BCC(zener,c_)
+    value = -y_interp(c_(c12,c44)) #* A_highZen_screw_BCC(c11,c12,c44)
+    return value
 
-def B_highZen_edge_BCC(zener,c_): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
+def B_highZen_edge_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
                                   # in BCC <111>{110} slip system
     a05 = 5.3020 # parameters for c_12/c_44 = 0.5
     b05 = 1.0945
@@ -302,23 +322,155 @@ def B_highZen_edge_BCC(zener,c_): # calculation of parameter B for Zener ratio >
     c2 =  0.1078
     d2 = -7.0570
     x = numpy.array([0.5,1,2])
-    y = numpy.array([param_eqn(a05,b05,c05,d05,zener),param_eqn(a1,b1,c1,d1,zener),param_eqn(a2,b2,c2,d2,zener)])
+    y = numpy.array([param_eqn(a05,b05,c05,d05,c11,c12,c44),param_eqn(a1,b1,c1,d1,c11,c12,c44),
+                     param_eqn(a2,b2,c2,d2,c11,c12,c44)])
     y_interp = scipy.interpolate.interp1d(x, y)
-    return -y_interp(c_) * A_highZen_edge_BCC(zener,c_)
+    value = -y_interp(c_(c12,c44)) #* A_highZen_edge_BCC(c11,c12,c44)
+    return value
+#------------------------------------------------------------------#
+def s(h,k,l):
+    s_list =[]
+    for i in range(0,len(h)):
+        s_list.append(h[i]**2 + k[i]**2 + l[i]**2)
+    print('s = ' + str(s_list))
+    return numpy.asarray(s_list)
+def H(h,k,l):
+    H_list = []
+    for i in range(0,len(h)):
+        H_list.append(((h[i]**2)*(k[i]**2) + (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    print('H = ' + str(H_list))
+    return numpy.asarray(H_list)
 
+def C_lowZen_screw_BCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_screw = ' + str(A_lowZen_screw_BCC(c11, c12, c44)))
+    print('B_screw = ' + str(B_lowZen_screw_BCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_lowZen_screw_BCC(c11,c12,c44) + B_lowZen_screw_BCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+def C_lowZen_edge_BCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_edge = ' + str(A_lowZen_edge_BCC(c11, c12, c44)))
+    print('B_edge = ' + str(B_lowZen_edge_BCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_lowZen_edge_BCC(c11,c12,c44) + B_lowZen_edge_BCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+def C_lowZen_screw_FCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_screw = ' + str(A_lowZen_screw_FCC(c11, c12, c44)))
+    print('B_screw = ' + str(B_lowZen_screw_FCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_lowZen_screw_FCC(c11,c12,c44) + B_lowZen_screw_FCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+def C_lowZen_edge_FCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_edge = ' + str(A_lowZen_edge_FCC(c11, c12, c44)))
+    print('B_edge = ' + str(B_lowZen_edge_FCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_lowZen_edge_FCC(c11,c12,c44) + B_lowZen_edge_FCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+#
+def C_highZen_screw_BCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_screw = ' + str(A_highZen_screw_BCC(c11, c12, c44)))
+    print('B_screw = ' + str(B_highZen_screw_BCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_highZen_screw_BCC(c11,c12,c44) + B_highZen_screw_BCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+def C_highZen_edge_BCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_edge = ' + str(A_highZen_edge_BCC(c11, c12, c44)))
+    print('B_edge = ' + str(B_highZen_edge_BCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_highZen_edge_BCC(c11,c12,c44) + B_highZen_edge_BCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+
+    return numpy.asarray(C_list)
+
+def C_highZen_screw_FCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_screw = ' + str(A_highZen_screw_FCC(c11, c12, c44)))
+    print('B_screw = ' + str(B_highZen_screw_FCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_highZen_screw_FCC(c11,c12,c44) + B_highZen_screw_FCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+def C_highZen_edge_FCC(c11,c12,c44,h,k,l):
+    C_list = []
+    print('A_edge = ' + str(A_highZen_edge_FCC(c11, c12, c44)))
+    print('B_edge = ' + str(B_highZen_edge_FCC(c11, c12, c44)))
+    for i in range(0,len(h)):
+        C_list.append(A_highZen_edge_FCC(c11,c12,c44) + B_highZen_edge_FCC(c11,c12,c44) * ((h[i]**2)*(k[i]**2) +\
+                                              (h[i]**2)*(l[i]**2) + (k[i]**2)*(l[i]**2))/(h[i]**2 + k[i]**2 + l[i]**2)**2)
+    return numpy.asarray(C_list)
+
+#---PLOTTING--------------------------------------------------------------#
+def s_vs_C(h,k,l,C_avg):
+    plt.scatter(s(h,k,l),C_avg)
+    plt.show()
+    return
+def H_vs_C(h,k,l,C_avg):
+    plt.scatter(H(h, k, l), C_avg)
+    plt.show()
+    return
 #===================================================#
 
 def main():
 #--- User inputs ----------------------#
-    c11 = 1
-    c12 = 2
-    c44 = 3
+    c11 = 243.6
+    c12 = 149.4
+    c44 = 119.6
+    crystal_type = 'FCC'
     screw_fraction = 0.5
     edge_fraction = 1 - screw_fraction
 #--------------------------------------#
     zener_ratio = zener(c11,c12,c44)
-    #if (zener_ratio <= 0.5):
-    print(A_lowZen_screw_BCC(0.4,2.35))
+    print('Zener ratio = ' + str(zener_ratio))
+    print('c_12/c44 = ' + str(c_(c12,c44)))
+    hkl = open("hkl.txt").readlines()
+    h = []
+    k = []
+    l = []
+    for i in range(0, len(hkl)):
+        row = (hkl[i].split(" "))
+        h.append(int(row[0]))
+        k.append(int(row[1]))
+        l.append(int(row[2]))
+
+    if zener_ratio <= 0.5:
+        if crystal_type == 'BCC':
+            C_screw = C_lowZen_screw_BCC(c11,c12,c44,h,k,l)
+            C_edge = C_lowZen_edge_BCC(c11,c12,c44,h,k,l)
+        elif crystal_type == 'FCC':
+            C_screw = C_lowZen_screw_FCC(c11,c12,c44,h,k,l)
+            C_edge = C_lowZen_edge_FCC(c11,c12,c44,h,k,l)
+        else:
+            print ('Invalid')
+    elif (zener_ratio > 0.5) & (zener_ratio <= 8):
+        if crystal_type == 'BCC':
+            C_screw = C_highZen_screw_BCC(c11,c12,c44,h,k,l)
+            C_edge = C_highZen_edge_BCC(c11,c12,c44,h,k,l)
+        elif crystal_type == 'FCC':
+            C_screw = C_highZen_screw_FCC(c11,c12,c44,h,k,l)
+            C_edge = C_highZen_edge_FCC(c11,c12,c44,h,k,l)
+    else:
+        print('Invalid')
+    C_avg = (screw_fraction * C_screw + edge_fraction * C_edge)/2
+    H(h, k, l)
+    s(h, k, l)
+    print('C_avg = ' + str(C_avg))
+    #s_vs_C(h,k,l,C_avg)
+    #H_vs_C(h,k,l,C_avg)
     return
 
 main()
