@@ -434,14 +434,14 @@ def H_vs_C(h,k,l,C_avg):
 #===================================================#
 
 def main():
-#--- User inputs ----------------------#
+#--- User inputs -----------------------#
     c11 = 243.6
     c12 = 149.4
     c44 = 119.6
     crystal_type = 'FCC'
     screw_fraction = 0.5
     edge_fraction = 1 - screw_fraction
-#--------------------------------------#
+#---------------------------------------#
     zener_ratio = zener(c11,c12,c44)
     print('Zener ratio = ' + str(zener_ratio))
     print('c_12/c44 = ' + str(c_(c12,c44)))
