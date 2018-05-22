@@ -503,7 +503,7 @@ def main():
         k.append(int(row[1]))
         l.append(int(row[2]))
 
-    if zener_ratio <= 0.5:
+    if zener_ratio <= 0.53:
         if crystal_type == 'BCC':
             C_screw = C_lowZen_screw_BCC(c11,c12,c44,h,k,l)
             C_edge = C_lowZen_edge_BCC(c11,c12,c44,h,k,l)
@@ -511,7 +511,7 @@ def main():
             C_screw = C_lowZen_screw_FCC(c11,c12,c44,h,k,l)
             C_edge = C_lowZen_edge_FCC(c11,c12,c44,h,k,l)
         else: print ('Unsupported crystal type')
-    elif (zener_ratio > 0.5) & (zener_ratio <= 8):
+    elif (zener_ratio > 0.53) & (zener_ratio <= 8):
         if crystal_type == 'BCC':
             C_screw = C_highZen_screw_BCC(c11,c12,c44,h,k,l)
             C_edge = C_highZen_edge_BCC(c11,c12,c44,h,k,l)
