@@ -24,10 +24,10 @@ def A_lowZen_screw_FCC(c11,c12,c44): # calculation of parameter A for Zener rati
     d = 0.0275
     value = param_eqn(a,b,c,d,c11,c12,c44)
     return value
+
 def A_lowZen_edge_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation
                                     # in FCC <110>{111} slip system
     if (c12/c44 > 3 or c12/c44 < 0.5):
-        print ('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 0.0737 # parameters for c_12/c_44 = 0.5
@@ -56,7 +56,6 @@ def A_lowZen_edge_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio
 def A_lowZen_screw_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for screw dislocation in
                                      # BCC <111>{110} slip system
     if (c12/c44 > 5 or c12/c44 < 0.5):
-        print ('c12/c44 out of range. A_screw and B_screw set to 0.')
         value = 0
     else:
         a05 = 0.0736 # parameters for c_12/c_44 = 0.5
@@ -90,7 +89,6 @@ def A_lowZen_screw_BCC(c11,c12,c44): # calculation of parameter A for Zener rati
 def A_lowZen_edge_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio <=0.5 for edge dislocation in
                                     # BCC <111>{110} slip system
     if (c12/c44 > 5 or c12/c44 < 0.5):
-        print ('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 0.0565 # parameters for c_12/c_44 = 0.5
@@ -135,7 +133,6 @@ def B_lowZen_screw_FCC(c11,c12,c44): # calculation of parameter B for Zener rati
 def B_lowZen_edge_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
                                     # in FCC <110>{111} slip system
     if (c12/c44 > 3 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 43.4223 # parameters for c_12/c_44 = 0.5
@@ -173,7 +170,6 @@ def B_lowZen_screw_BCC(c11,c12,c44): # calculation of parameter B for Zener rati
 def B_lowZen_edge_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio <=0.5 for edge dislocation
                                     # in BCC <111>{110} slip system
     if (c12/c44 > 5 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 45.89136 # parameters for c_12/c_44 = 0.5
@@ -218,7 +214,6 @@ def A_highZen_screw_FCC(c11,c12,c44): # calculation of parameter A for Zener rat
 def A_highZen_edge_FCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
                                      # in FCC <110>{111} slip system
     if (c12/c44 > 3 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 0.1312 # parameters for c_12/c_44 = 0.5
@@ -256,7 +251,6 @@ def A_highZen_screw_BCC(c11,c12,c44): # calculation of parameter A for Zener rat
 def A_highZen_edge_BCC(c11,c12,c44): # calculation of parameter A for Zener ratio > 0.5 for edge dislocation
                                      # in BCC <111>{110} slip system
     if (c12/c44 > 2 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 1.4948 # parameters for c_12/c_44 = 0.5
@@ -292,7 +286,6 @@ def B_highZen_screw_FCC(c11,c12,c44): # calculation of parameter B for Zener rat
 def B_highZen_edge_FCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
                                      # in FCC <110>{111} slip system
     if (c12/c44 > 3 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 4.0327 # parameters for c_12/c_44 = 0.5
@@ -346,7 +339,6 @@ def B_highZen_screw_BCC(c11,c12,c44): # calculation of parameter B for Zener rat
 def B_highZen_edge_BCC(c11,c12,c44): # calculation of parameter B for Zener ratio > 0.5 for edge dislocation
                                      # in BCC <111>{110} slip system
     if (c12/c44 > 2 or c12/c44 < 0.5):
-        print('c12/c44 out of range. A_edge and B_edge set to 0.')
         value = 0
     else:
         a05 = 5.3020 # parameters for c_12/c_44 = 0.5
@@ -386,6 +378,8 @@ def H(h,k,l):
 
 def C_lowZen_screw_BCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_lowZen_screw_BCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_screw and B_screw set to 0.')
     print('A_screw = ' + str(A_lowZen_screw_BCC(c11, c12, c44)))
     print('B_screw = ' + str(B_lowZen_screw_BCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -395,6 +389,8 @@ def C_lowZen_screw_BCC(c11,c12,c44,h,k,l):
 
 def C_lowZen_edge_BCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_lowZen_edge_BCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_edge and B_edge set to 0.')
     print('A_edge = ' + str(A_lowZen_edge_BCC(c11, c12, c44)))
     print('B_edge = ' + str(B_lowZen_edge_BCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -404,6 +400,8 @@ def C_lowZen_edge_BCC(c11,c12,c44,h,k,l):
 
 def C_lowZen_screw_FCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_lowZen_screw_FCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_screw and B_screw set to 0.')
     print('A_screw = ' + str(A_lowZen_screw_FCC(c11, c12, c44)))
     print('B_screw = ' + str(B_lowZen_screw_FCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -413,6 +411,8 @@ def C_lowZen_screw_FCC(c11,c12,c44,h,k,l):
 
 def C_lowZen_edge_FCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_lowZen_edge_FCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_edge and B_edge set to 0.')
     print('A_edge = ' + str(A_lowZen_edge_FCC(c11, c12, c44)))
     print('B_edge = ' + str(B_lowZen_edge_FCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -424,6 +424,8 @@ def C_lowZen_edge_FCC(c11,c12,c44,h,k,l):
 
 def C_highZen_screw_BCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_highZen_screw_BCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_screw and B_screw set to 0.')
     print('A_screw = ' + str(A_highZen_screw_BCC(c11, c12, c44)))
     print('B_screw = ' + str(B_highZen_screw_BCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -433,6 +435,8 @@ def C_highZen_screw_BCC(c11,c12,c44,h,k,l):
 
 def C_highZen_edge_BCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_highZen_edge_BCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_edge and B_edge set to 0.')
     print('A_edge = ' + str(A_highZen_edge_BCC(c11, c12, c44)))
     print('B_edge = ' + str(B_highZen_edge_BCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -443,6 +447,8 @@ def C_highZen_edge_BCC(c11,c12,c44,h,k,l):
 
 def C_highZen_screw_FCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_highZen_screw_FCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_screw and B_screw set to 0.')
     print('A_screw = ' + str(A_highZen_screw_FCC(c11, c12, c44)))
     print('B_screw = ' + str(B_highZen_screw_FCC(c11, c12, c44)))
     for i in range(0,len(h)):
@@ -452,6 +458,8 @@ def C_highZen_screw_FCC(c11,c12,c44,h,k,l):
 
 def C_highZen_edge_FCC(c11,c12,c44,h,k,l):
     C_list = []
+    if (A_highZen_edge_FCC(c11, c12, c44) == 0):
+        print('c12/c44 out of range. A_edge and B_edge set to 0.')
     print('A_edge = ' + str(A_highZen_edge_FCC(c11, c12, c44)))
     print('B_edge = ' + str(B_highZen_edge_FCC(c11, c12, c44)))
     for i in range(0,len(h)):
